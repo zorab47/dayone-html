@@ -5,6 +5,7 @@ require 'haml'
 require 'sass'
 require 'plist'
 require 'redcarpet'
+require 'html/pipeline'
 require './entry.rb'
 
 class DayOneHtml < Sinatra::Base
@@ -69,7 +70,10 @@ class DayOneHtml < Sinatra::Base
   end
 
   def get_markdown()
-    Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true, :space_after_headers => true)
+    # Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true, :space_after_headers => true)
+    HTML::Pipeline.new [
+      HTML::Pipeline::MarkdownFilter
+    ], { gfm: true }
   end
 end
 
