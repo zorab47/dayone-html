@@ -7,17 +7,47 @@
     %link{:rel=>'stylesheet', :href=>'/dayone.css'}
     %link{:rel=>'stylesheet', :href=>'/print.css', :media => 'print'}
     <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    %script{ src: "https://code.jquery.com/jquery-2.1.3.min.js" }
   %body
     - @entries.each do |entry|
-      %section
+
+      %section{ id: entry.id }
+        %span.date
+          - date = entry.date_central
+          %span.dow= date.strftime("%a")
+          %span.day= date.strftime("%d")
+          %span.month= date.strftime("%b")
+          %span.year= date.strftime("%Y")
+
+          - if entry.starred?
+            %span.starred &#9733;
+
+        .meta-data
+
+          %span.time= date.strftime("%l:%M %p")
+
+          - if entry.source
+            = entry.source.to_s.capitalize
+
+          - if entry.location?
+            &middot;
+            = entry.location
+
+          - if entry.weather?
+            &middot;
+            = "#{entry.temperature}&deg;"
+            = entry.weather_description
+
         - if entry.has_photo
           %img.photo{:src=>'/photo/' + entry.id + '.jpg'}
-        = @markdown.render(entry.text)
-        %span.date
-          = entry.date_central.strftime("%A, %B %d, %Y")
-        - if entry.tags
-          %ul.tags
-            - entry.tags.each do |tag|
-              %li
-                %a{:href=>'/tag/' + tag}
-                  =tag
+
+        .content
+
+          = @markdown.call(entry.text)[:output]
+
+          -# if entry.tags
+            %ul.tags
+              - entry.tags.each do |tag|
+                %li
+                  %a{:href=>'/tag/' + tag}
+                    =tag

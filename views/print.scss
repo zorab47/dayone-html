@@ -1,8 +1,14 @@
+@page {
+  width: 8.25in;
+  height: 10.75in;
+}
+
 .tags {
   display: none;
 }
 
 .photo {
   max-height: 75%;
+  max-height: 6in;
   margin-bottom: 2em;
 }
