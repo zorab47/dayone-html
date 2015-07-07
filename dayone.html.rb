@@ -13,9 +13,10 @@ class DayOneHtml < Sinatra::Base
 
   config_file 'config.yml'
 
-  def initialize()
+  def initialize
     super
-    @entries_path = ENV["HOME"] + "/Dropbox/Apps/Day One/Journal.dayone/entries/"
+    @entries_paths = settings.journals
+    $stderr.puts "Journal paths: #{ @entries_paths.inspect }"
   end
 
   get '/' do
@@ -41,7 +42,7 @@ class DayOneHtml < Sinatra::Base
   end
 
   get '/photo/:id.jpg' do |id|
-    entry = Entry.from_path(@entries_path + id + '.doentry', @entries_path + '../photos/' + id + '.jpg')
+    entry = find_entry(id)
     redirect 404 unless entry.has_photo
 
     cache_control :public, max_age: 60
@@ -54,13 +55,26 @@ class DayOneHtml < Sinatra::Base
     scss style.to_sym
   end
 
+  def find_entry(id)
+    source, path = @entries_paths.detect { |source, path| File.exist?(path + id + '.doentry') }
+    Entry.from_path(path + id + '.doentry', path + '../photos/' + id + '.jpg', source)
+  end
+
   def get_entries()
     @entries = []
-    Dir.glob(@entries_path + '*.doentry') do |entry_path|
-      photo_path = entry_path.sub('entries', 'photos').sub('.doentry', '.jpg')
-      entry = Entry.from_path(entry_path, photo_path)
-      if entry.date >= settings.startDate and entry.date <= settings.endDate
-        @entries << Entry.from_path(entry_path, photo_path)
+
+    $stderr.puts "Reading journal entries:"
+
+    @entries_paths.each do |source, path|
+      Dir.glob(path + '*.doentry') do |entry_path|
+
+        $stderr.puts "\t#{entry_path}"
+
+        photo_path = entry_path.sub('entries', 'photos').sub('.doentry', '.jpg')
+        entry = Entry.from_path(entry_path, photo_path, source)
+        if entry.date >= settings.startDate and entry.date <= settings.endDate
+          @entries << Entry.from_path(entry_path, photo_path, source)
+        end
       end
     end
 
@@ -70,7 +84,6 @@ class DayOneHtml < Sinatra::Base
   end
 
   def get_markdown()
-    # Redcarpet::Markdown.new(Redcarpet::Render::HTML, :autolink => true, :space_after_headers => true)
     HTML::Pipeline.new [
       HTML::Pipeline::MarkdownFilter
     ], { gfm: true }
