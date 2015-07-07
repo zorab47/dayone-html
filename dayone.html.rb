@@ -76,5 +76,3 @@ class DayOneHtml < Sinatra::Base
     ], { gfm: true }
   end
 end
-
-DayOneHtml.run!
