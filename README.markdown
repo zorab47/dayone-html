@@ -9,32 +9,31 @@ Dropbox rather than iCloud.
 It's not very flexible. You'll need to know your way around Ruby /
 Sinatra to get it customized to your liking.
 
-![screenshot](http://f.cl.ly/items/0d3N42390Z0f0g3p060M/Screen%20Shot%202014-03-22%20at%2011.25.58%20AM.png)
+![screenshot](https://cloud.githubusercontent.com/assets/25094/8538675/aa9c28dc-2435-11e5-85e2-e11b3b9e8053.png)
+
+## Enhancements
+
+- Allow multiple journals to be merged together into one view.
+- Provide location, weather, and star status metadata for entries.
+- Update styles to be more familiar to those from Day One.
 
 ## Installation
 
 ### Prerequisites
 
-* Install the latest version of Mac OS X (Yosemite). This includes
-  Ruby v2 by default. (this may work on older versions, but I have
-  not tested.)
-* Open Terminal and run `sudo gem install bundler`
-* Install [homebrew][4]
-* brew install pkgconfig
-* brew install [imagemagick][3]
+* Ruby 2.0+
+* [imagemagick][2]
 
 ### Steps
 
 Open Terminal and run the following commands:
 
-1. `git clone https://github.com/donnierayjones/dayone-html.git`
+1. `git clone https://github.com/zorab47/dayone-html.git`
 2. `cd dayone-html`
-3. `sudo bundle install`
+3. `bundle install`
 4. `bundle exec ruby dayone.html.rb`
 
 Now visit localhost:4567 to see your journal in HTML!
 
 [1]: http://dayoneapp.com/
-[2]: http://git-scm.com/downloads
-[3]: http://www.imagemagick.org/script/binary-releases.php#macosx
-[4]: http://brew.sh/
+[2]: http://www.imagemagick.org
