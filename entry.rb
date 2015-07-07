@@ -19,7 +19,7 @@ class Entry
   end
 
   def text
-    @plist['Entry Text']
+    @plist['Entry Text'].gsub(/---/, "<hr />").gsub(/--/, "—")
   end
 
   def date
